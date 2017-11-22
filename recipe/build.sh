@@ -6,14 +6,30 @@ IFS=$' \t\n' # workaround for conda 4.2.13+toolchain bug
 # Adopt a Unix-friendly path if we're on Windows (see bld.bat).
 [ -n "$PATH_OVERRIDE" ] && export PATH="$PATH_OVERRIDE"
 
-# On Windows we want $LIBRARY_PREFIX not $PREFIX, but its Unix path
-# currently works out to "/" which needs special-casing.
-if [ "$LIBRARY_PREFIX" = / ] ; then
-    useprefix=""
-elif [ -n "$LIBRARY_PREFIX" ] ; then
-    useprefix="$LIBRARY_PREFIX"
+# On Windows we want $LIBRARY_PREFIX in both "mixed" (C:/Conda/...) and Unix
+# (/c/Conda) forms, but Unix form is often "/" which can cause problems.
+if [ -n "$LIBRARY_PREFIX_M" ] ; then
+    mprefix="$LIBRARY_PREFIX_M"
+    if [ "$ARCH" = "32" ]; then
+        bprefix="${mprefix/h_env/build_env}"
+    else
+        bprefix=$mprefix
+    fi
+    if [ "$LIBRARY_PREFIX_U" = / ] ; then
+        uprefix=""
+    else
+        uprefix="$LIBRARY_PREFIX_U"
+    fi
+    if [ "$ARCH" = "32" ]; then
+        ubprefix="${uprefix/h_env/build_env}"
+    else
+        ubprefix=$uprefix
+    fi
 else
-    useprefix="$PREFIX"
+    mprefix="$PREFIX"
+    bprefix="$PREFIX"
+    uprefix="$PREFIX"
+    ubprefix="$PREFIX"
 fi
 
 # On Windows we need to regenerate the configure scripts.
@@ -24,7 +40,7 @@ if [ -n "$VS_MAJOR" ] ; then
     autoreconf_args=(
         --force
         --install
-        -I "$useprefix/mingw-w64/share/aclocal" # note: this is correct for win32 also!
+        -I "$ubprefix/mingw-w64/share/aclocal" # note: this is correct for win32 also!
     )
     autoreconf "${autoreconf_args[@]}"
 fi
@@ -35,17 +51,17 @@ fi
 # fails on msys2 unless we use msys2's autotools. But to smooth the transition
 # we'll keep distributing the files for a bit.
 
-mkdir -p $useprefix/share/util-macros
+mkdir -p $uprefix/share/util-macros
 
 for f in config.guess config.sub ; do
     cp -p $RECIPE_DIR/$f .
-    cp -p $RECIPE_DIR/$f $useprefix/share/util-macros/
+    cp -p $RECIPE_DIR/$f $uprefix/share/util-macros/
 done
 
-export PKG_CONFIG_LIBDIR=$useprefix/lib/pkgconfig:$useprefix/share/pkgconfig
+export PKG_CONFIG_LIBDIR=$uprefix/lib/pkgconfig:$uprefix/share/pkgconfig
 
 configure_args=(
-    --prefix=$useprefix
+    --prefix=$uprefix
     --disable-dependency-tracking
     --disable-selective-werror
     --disable-silent-rules

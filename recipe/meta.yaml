@@ -17,6 +17,7 @@ source:
 build:
   number: 1
   detect_binary_files_with_prefix: true
+  skip: True  # [osx]
 
 requirements:
   build:
@@ -26,8 +27,8 @@ requirements:
     - m2w64-pkg-config  # [win]
     - m2w64-toolchain  # [win]
     - pkg-config  # [not win]
-    - posix  # [win]
-    - toolchain
+    - posix                 # [win]
+    - {{ compiler('c') }}   # [linux]
 
 test:
   commands:
@@ -44,3 +45,4 @@ about:
 extra:
   recipe-maintainers:
     - pkgw
+    - msarahan
