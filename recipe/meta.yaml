@@ -29,6 +29,7 @@ requirements:
     - pkg-config  # [not win]
     - posix                 # [win]
     - {{ compiler('c') }}   # [linux]
+    - make  # [unix]
 
 test:
   commands:
