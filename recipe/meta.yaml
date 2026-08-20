@@ -1,23 +1,21 @@
-{% set xorg_name = "util-macros" %}
+{% set name = "xorg-util-macros" %}
+{% set version = "1.20.2" %}
 {% set xorg_category = "util" %}
-{% set name = "xorg-" ~ xorg_name %}
-{% set version = "1.19.0" %}
-{% set sha256 = "2835b11829ee634e19fa56517b4cfc52ef39acea0cd82e15f68096e27cbed0ba" %}
 {% set am_version = "1.15" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.bz2
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.bz2
-  sha256: {{ sha256 }}
+  fn: {{ name }}-{{ version }}.tar.xz
+  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ name.split('-')[1] }}-{{ name.split('-')[2] }}-{{ version }}.tar.xz
+  sha256: 9ac269eba24f672d7d7b3574e4be5f333d13f04a7712303b1821b2a51ac82e8e
 
 build:
-  number: 1
+  number: 0
   detect_binary_files_with_prefix: true
-  skip: True  # [osx]
+  # skip: true  # [osx]
 
 requirements:
   build:
@@ -28,6 +26,7 @@ requirements:
     - m2w64-toolchain  # [win]
     - pkg-config  # [not win]
     - posix                 # [win]
+    - {{ stdlib("c") }}  # [linux]
     - {{ compiler('c') }}   # [linux]
     - make  # [unix]
 
