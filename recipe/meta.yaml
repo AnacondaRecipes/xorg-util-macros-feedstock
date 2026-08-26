@@ -53,3 +53,6 @@ extra:
     - msarahan
   skip-lints:
     - missing_tests
+    - m2_must_be_updated_to_msys2
+    - m2w64_must_be_updated_to_ucrt64
+    - m2_must_be_updated_to_msys2
