@@ -15,7 +15,6 @@ source:
 build:
   number: 0
   detect_binary_files_with_prefix: true
-  # skip: true  # [osx]
 
 requirements:
   build:
@@ -31,11 +30,9 @@ requirements:
     - make  # [unix]
 
 test:
-  requires:
-    - conda_build
   commands:
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
+    - test -f $PREFIX/share/aclocal/xorg-macros.m4  # [not win]
+    - if not exist %LIBRARY_PREFIX%\share\aclocal\xorg-macros.m4 exit 1  # [win]
 
 about:
   home: https://www.x.org
