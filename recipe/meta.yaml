@@ -1,6 +1,5 @@
 {% set name = "xorg-util-macros" %}
 {% set version = "1.20.2" %}
-{% set xorg_category = "util" %}
 {% set am_version = "1.15" %}
 
 package:
@@ -9,7 +8,7 @@ package:
 
 source:
   fn: {{ name }}-{{ version }}.tar.xz
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ name.split('-')[1] }}-{{ name.split('-')[2] }}-{{ version }}.tar.xz
+  url: https://www.x.org/releases/individual/util/{{ name.split('-')[1] }}-{{ name.split('-')[2] }}-{{ version }}.tar.xz
   sha256: 9ac269eba24f672d7d7b3574e4be5f333d13f04a7712303b1821b2a51ac82e8e
 
 build:
@@ -18,7 +17,7 @@ build:
 
 requirements:
   build:
-    - {{ stdlib("c") }}  # [linux]
+    - {{ stdlib('c') }}  # [linux]
     - {{ compiler('c') }}   # [linux]
     - m2-autoconf  # [win]
     - m2-automake{{ am_version }}  # [win]
