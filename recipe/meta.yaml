@@ -13,19 +13,14 @@ source:
 
 build:
   number: 0
+  skip: true  # [win]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
     - {{ stdlib('c') }}  # [linux]
     - {{ compiler('c') }}   # [linux]
-    - m2-autoconf  # [win]
-    - m2-automake{{ am_version }}  # [win]
-    - m2-libtool  # [win]
-    - m2w64-pkg-config  # [win]
-    - m2w64-toolchain  # [win]
     - pkg-config  # [not win]
-    - posix                 # [win]
     - make  # [unix]
 
 test:
